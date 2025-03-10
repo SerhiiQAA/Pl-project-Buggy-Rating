@@ -20,6 +20,9 @@ const warningLabel = '.label-warning';
 const validationMessageLogin = 'Please fill out this field.';
 const validationMessagePassword = 'Please fill out this field.';
 const logo = '.navbar-brand';
+const logoutButton = 'li.nav-item:nth-child(3) > a:nth-child(1)';
+
+const hiMessageAccount = '.nav-item:nth-of-type(1)';
 
 class MainPage {
     readonly page;
@@ -63,7 +66,7 @@ class MainPage {
         expect((await this.page.locator(warningLabel).textContent()).trim()).toBe('Invalid username/password');
     }
 
-    async checkValidationMessagesLogin() {
+    async checkValidationMessages() {
         const loginMessage = await this.page.locator(loginInput).evaluate(input => (input as HTMLInputElement).validationMessage);
         expect(loginMessage).toBe(validationMessageLogin);
 
@@ -101,6 +104,14 @@ class MainPage {
 
     async getTitle(selector: string) {
         return await this.page.locator(selector).textContent();
+    }
+
+    async checkHiMessageLogin(selector: string) {
+        return await this.page.locator(hiMessageAccount).textContent();
+    }
+
+    async clicklogoutButton() {
+        await this.page.locator(logoutButton).click();
     }
 
     async clickFacebookButton() {
