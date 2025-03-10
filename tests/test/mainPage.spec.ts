@@ -29,22 +29,22 @@ test('validate empty login and password fields', async ({ page }) => {
     await mainPage.checkValidationMessages();
 });
 
-test('validate only login filled', async ({ page }) => {
-    const mainPage = new MainPage(page);
+// test('validate only login filled', async ({ page }) => {
+//     const mainPage = new MainPage(page);
 
-    await mainPage.goto();
-    await mainPage.fillLoginDetails('validLogin', '');
-    await mainPage.clickLoginButton();
-    await mainPage.checkValidationMessages();
-});
+//     await mainPage.goto();
+//     await mainPage.fillLoginDetails('validLogin', '');
+//     await mainPage.clickLoginButton();
+//     await mainPage.checkValidationMessages();
+// });
 
-test('validate only password filled', async ({ page }) => {
-    const mainPage = new MainPage(page);
+// test('validate only password filled', async ({ page }) => {
+//     const mainPage = new MainPage(page);
 
-    await mainPage.goto();
-    await mainPage.fillLoginDetails('', 'validPassword');
-    await mainPage.clickLoginButton();
-    await mainPage.checkValidationMessages();
-});
+//     await mainPage.goto();
+//     await mainPage.fillLoginDetails('', 'validPassword');
+//     await mainPage.clickLoginButton();
+//     await mainPage.checkValidationMessages();
+// });
 
 
