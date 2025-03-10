@@ -8,9 +8,9 @@ test('has title', async ({ page }) => {
     await mainPage.goto();
     await mainPage.checkTitle();
     await mainPage.checkPlaceholder();
-    await mainPage.fillLoginDetails('test', 'test');
-    await mainPage.clickSubmitButton();
-    await mainPage.checkWarningLabel();
+    // await mainPage.fillLoginDetails('', '');
+    await mainPage.clickLoginButton();
+    await mainPage.checkValidationMessagesLogin();
     await mainPage.takeScreenshot('screenshot_after_action.png');
-});
 
+});
