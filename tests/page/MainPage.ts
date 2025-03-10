@@ -2,9 +2,26 @@ import { test, expect } from '@playwright/test';
 
 const loginInput = 'input[name="login"]';
 const passwordInput = 'input[name="password"]';
-const submitButton = '.btn-success';
+const loginButton = '.btn-success';
+
+const  firstAvtoCard = '.img-fluid.center-block:nth-of-type(1)'
+const  secondAvtoCard = '.img-fluid.center-block:nth-of-type(2)'
+const  thirdAvtoCard = '.img-fluid.center-block:nth-of-type(3)'
+
+const  firstAvtoCardTitle = 'h2:nth-of-type(1)'
+const  secondAvtoCardTitle = 'h2:nth-of-type(2)'
+const  thirdAvtoCardTitle = 'h2:nth-of-type(3)'
+
+const facebookSocialMediaButton = '[title="Facebook"]';
+const xSocialMediaButton = '[title="Twitter"]';
+
+const registerButton = '.btn-success-outline';
+
 const warningLabel = '.label-warning';
 const validationMessage = 'Please fill out this field.';
+const logo = '.navbar-brand';
+
+
 
 class MainPage {
     readonly page;
