@@ -24,6 +24,7 @@ test.describe('Registration Page Validation', () => {
             confirmPassword: validPassword
         });
         await registerPage.clickRegisterButton();
+        
     });
 
     test('should disable register button when all fields are empty', async () => {
@@ -87,6 +88,8 @@ test.describe('Registration Page Validation', () => {
             password: validPassword,
             confirmPassword: invalidConfirmPassword
         });
+        expect(await registerPage.isRegisterButtonDisabled()).toBeTruthy();
+
         const errorMessage = await registerPage.getPasswordMismatchError();
         expect(errorMessage).toContain('Passwords do not match');
     });
