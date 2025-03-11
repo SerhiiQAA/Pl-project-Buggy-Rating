@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import assert from 'assert';
 import { MainPage } from '../page/MainPage.ts';
 
-test('validate both login and password filled', async ({ page }) => {
+test('validate with valid login and password filled', async ({ page }) => {
     const mainPage = new MainPage(page);
 
     await mainPage.goto();
@@ -11,7 +11,16 @@ test('validate both login and password filled', async ({ page }) => {
     await mainPage.clicklogoutButton();
 });
 
-test('has title', async ({ page }) => {
+test('validate with invalid login and password fields', async ({ page }) => {
+    const mainPage = new MainPage(page);
+
+    await mainPage.goto();
+    await mainPage.fillLoginDetails('Error', 'error');
+    await mainPage.clickLoginButton();
+    await mainPage.checkWarningLabel();
+});
+
+test('validate with empty login and password fields', async ({ page }) => {
     const mainPage = new MainPage(page);
 
     await mainPage.goto();
@@ -20,29 +29,20 @@ test('has title', async ({ page }) => {
     await mainPage.errorMessageLogin();
 });
 
-test('validate empty login and password fields', async ({ page }) => {
+test('validate with only valid login filled', async ({ page }) => {
     const mainPage = new MainPage(page);
 
     await mainPage.goto();
-    await mainPage.fillLoginDetails('', '');
-    await mainPage.clickLoginButton();
-    await mainPage.errorMessageLogin();
-});
-
-test('validate only login filled', async ({ page }) => {
-    const mainPage = new MainPage(page);
-
-    await mainPage.goto();
-    await mainPage.fillLoginDetails('validLogin', '');
+    await mainPage.fillLoginDetails('TestLogin_', '');
     await mainPage.clickLoginButton();
     await mainPage.errorMessagePassword();
 });
 
-test('validate only password filled', async ({ page }) => {
+test('validate with only valid password filled', async ({ page }) => {
     const mainPage = new MainPage(page);
 
     await mainPage.goto();
-    await mainPage.fillLoginDetails('', 'validPassword');
+    await mainPage.fillLoginDetails('', 'Password1@');
     await mainPage.clickLoginButton();
     await mainPage.errorMessageLogin();
 });
