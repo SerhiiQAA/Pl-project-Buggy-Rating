@@ -19,7 +19,6 @@ const errorMessageForPasswords = '(//div[@class="alert alert-danger"])[6]';
 
 class RegisterPage {
     readonly page;
-    errorMessageForPasswords: any;
 
     constructor(page) {
         this.page = page;
@@ -48,20 +47,17 @@ class RegisterPage {
     }
 
     async isRegisterButtonDisabled() {
-        return this.page.isDisabled(registerButton); // Використовуємо без `this`
+        return this.page.isDisabled(registerButton); 
     }    
 
-    registerButton(registerButton: any) {
-        throw new Error('Method not implemented.');
+    // registerButton(registerButton: any) {
+    //     throw new Error('Method not implemented.');
+    // }
+
+    async getPasswordMismatchError() {
+        return this.page.textContent(errorMessageForPasswords);
     }
 
-    async getErrorMessage(locator) {
-        return this.page.textContent(locator);
-    }
-
-    async getPasswordMismatchErrorMessage() {
-        return this.page.textContent(this.errorMessageForPasswords);
-    }
 }
 
 export { RegisterPage };
