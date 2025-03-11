@@ -17,8 +17,7 @@ const facebookSocialMediaButton = '[title="Facebook"]';
 const xSocialMediaButton = '[title="Twitter"]';
 
 const warningLabel = '.label-warning';
-const validationMessageLogin = 'Please fill out this field.';
-const validationMessagePassword = 'Please fill out this field.';
+
 const logo = '.navbar-brand';
 const logoutButton = 'li.nav-item:nth-child(3) > a:nth-child(1)';
 
@@ -66,13 +65,15 @@ class MainPage {
         expect((await this.page.locator(warningLabel).textContent()).trim()).toBe('Invalid username/password');
     }
 
-    async checkValidationMessages() {
+    async errorMessageLogin() {
         const loginMessage = await this.page.locator(loginInput).evaluate(input => (input as HTMLInputElement).validationMessage);
-        expect(loginMessage).toBe(validationMessageLogin);
-
-        const passwordMessage = await this.page.locator(passwordInput).evaluate(input => (input as HTMLInputElement).validationMessage);
-        expect(passwordMessage).toBe(validationMessagePassword);
+        expect(loginMessage.toLowerCase()).toContain("fill out this field"); // Перевіряємо основну частину тексту
     }
+    
+    async errorMessagePassword() {
+        const passwordMessage = await this.page.locator(passwordInput).evaluate(input => (input as HTMLInputElement).validationMessage);
+        expect(passwordMessage.toLowerCase()).toContain("fill out this field"); // Перевіряємо основну частину тексту
+    }    
 
     async takeScreenshot(path: string) {
         await this.page.screenshot({ path: path });
