@@ -2,13 +2,13 @@ import { test, expect } from '@playwright/test';
 import assert from 'assert';
 import { MainPage } from '../page/MainPage.ts';
 
-test('validate with valid login and password filled', async ({ page }) => {
+test('validate with valid login and password fields', async ({ page }) => {
     const mainPage = new MainPage(page);
 
     await mainPage.goto();
     await mainPage.fillLoginDetails('TestLogin_', 'Password1@');
     await mainPage.clickLoginButton();
-    await mainPage.clicklogoutButton();
+    await mainPage.clickLogoutButton();
 });
 
 test('validate with invalid login and password fields', async ({ page }) => {
@@ -29,7 +29,7 @@ test('validate with empty login and password fields', async ({ page }) => {
     await mainPage.errorMessageLogin();
 });
 
-test('validate with only valid login filled', async ({ page }) => {
+test('validate with only valid login field', async ({ page }) => {
     const mainPage = new MainPage(page);
 
     await mainPage.goto();
@@ -38,7 +38,7 @@ test('validate with only valid login filled', async ({ page }) => {
     await mainPage.errorMessagePassword();
 });
 
-test('validate with only valid password filled', async ({ page }) => {
+test('validate with only valid password field', async ({ page }) => {
     const mainPage = new MainPage(page);
 
     await mainPage.goto();

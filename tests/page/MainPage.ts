@@ -31,7 +31,7 @@ class MainPage {
     }
 
     async goto() {
-        await this.page.goto('https://buggy.justtestit.org/');
+        await this.page.goto('/');
     }
 
     async checkTitle() {
@@ -41,7 +41,6 @@ class MainPage {
     async clickLogo() {
         await this.page.locator(logo).click();
     }
-    
 
     async checkPlaceholder() {
         expect(await this.page.locator(loginInput).evaluate((el) => (el as HTMLInputElement).placeholder === 'Login')).toBeTruthy();
@@ -67,12 +66,12 @@ class MainPage {
 
     async errorMessageLogin() {
         const loginMessage = await this.page.locator(loginInput).evaluate(input => (input as HTMLInputElement).validationMessage);
-        expect(loginMessage.toLowerCase()).toContain("fill out this field"); // Перевіряємо основну частину тексту
+        expect(loginMessage.toLowerCase()).toContain("fill out this field"); 
     }
     
     async errorMessagePassword() {
         const passwordMessage = await this.page.locator(passwordInput).evaluate(input => (input as HTMLInputElement).validationMessage);
-        expect(passwordMessage.toLowerCase()).toContain("fill out this field"); // Перевіряємо основну частину тексту
+        expect(passwordMessage.toLowerCase()).toContain("fill out this field"); 
     }    
 
     async takeScreenshot(path: string) {
@@ -103,7 +102,7 @@ class MainPage {
         await this.page.locator(thirdAvtoCard).click();
     }
 
-    async getTitle(selector: string) {
+    async mainPageTitle(selector: string) {
         return await this.page.locator(selector).textContent();
     }
 
@@ -111,7 +110,7 @@ class MainPage {
         return await this.page.locator(hiMessageAccount).textContent();
     }
 
-    async clicklogoutButton() {
+    async clickLogoutButton() {
         await this.page.locator(logoutButton).click();
     }
 
