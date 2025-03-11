@@ -31,7 +31,7 @@ class MainPage {
     }
 
     async goto() {
-        await this.page.goto('/');
+        await this.page.goto('https://buggy.justtestit.org/');
     }
 
     async checkTitle() {

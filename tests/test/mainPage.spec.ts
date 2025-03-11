@@ -18,7 +18,7 @@ test.describe('Login Page Validation', () => {
 
     test('validate with invalid login and password fields', async () => {
         const invalidLogin = faker.string.alphanumeric(8); 
-        const invalidPassword = faker.internet.password({ length: 4, memorable: false });
+        const invalidPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
 
         await mainPage.fillLoginDetails(invalidLogin, invalidPassword);
         await mainPage.clickLoginButton();
@@ -39,11 +39,7 @@ test.describe('Login Page Validation', () => {
     });
 
     test('validate with only valid password field', async () => {
-        const validPassword = faker.internet.password({
-            length: 8,
-            memorable: false,
-            pattern: /[a-zA-Z0-9]/ 
-        });
+        const validPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
          
         await mainPage.fillLoginDetails('', validPassword); 
         await mainPage.clickLoginButton();

@@ -25,7 +25,7 @@ class RegisterPage {
     }
 
     async goto() {
-        await this.page.goto('register');
+        await this.page.goto('https://buggy.justtestit.org/register');
     }
 
     async fillField(locator, value) {
@@ -50,14 +50,9 @@ class RegisterPage {
         return this.page.isDisabled(registerButton); 
     }    
 
-    // registerButton(registerButton: any) {
-    //     throw new Error('Method not implemented.');
-    // }
-
     async getPasswordMismatchError() {
         return this.page.textContent(errorMessageForPasswords);
     }
-
 }
 
 export { RegisterPage };

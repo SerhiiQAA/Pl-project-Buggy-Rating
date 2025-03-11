@@ -14,7 +14,7 @@ test.describe('Registration Page Validation', () => {
         const validLogin = faker.string.alphanumeric(8);
         const validFirstName = faker.person.firstName();
         const validLastName = faker.person.lastName();
-        const validPassword = faker.internet.password({ length: 12, memorable: false });
+        const validPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
         
         await registerPage.fillForm({
             login: validLogin,
@@ -24,7 +24,7 @@ test.describe('Registration Page Validation', () => {
             confirmPassword: validPassword
         });
         await registerPage.clickRegisterButton();
-        
+
     });
 
     test('should disable register button when all fields are empty', async () => {
@@ -35,7 +35,7 @@ test.describe('Registration Page Validation', () => {
     test('should show error when login is missing', async () => {
         const validFirstName = faker.person.firstName();
         const validLastName = faker.person.lastName();
-        const validPassword = faker.internet.password({ length: 10, memorable: false });
+        const validPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
         
         await registerPage.fillForm({
             firstName: validFirstName,
@@ -49,7 +49,7 @@ test.describe('Registration Page Validation', () => {
     test('should show error when first name is missing', async () => {
         const validLogin = faker.string.alphanumeric(8);
         const validLastName = faker.person.lastName();
-        const validPassword = faker.internet.password({ length: 10, memorable: false });
+        const validPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
         
         await registerPage.fillForm({
             login: validLogin,
@@ -63,7 +63,7 @@ test.describe('Registration Page Validation', () => {
     test('should show error when last name is missing', async () => {
         const validLogin = faker.string.alphanumeric(8);
         const validFirstName = faker.person.firstName();
-        const validPassword = faker.internet.password({ length: 10, memorable: false });
+        const validPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
         
         await registerPage.fillForm({
             login: validLogin,
@@ -78,8 +78,8 @@ test.describe('Registration Page Validation', () => {
         const validLogin = faker.string.alphanumeric(8);
         const validFirstName = faker.person.firstName();
         const validLastName = faker.person.lastName();
-        const validPassword = faker.internet.password({ length: 10, memorable: false });
-        const invalidConfirmPassword = faker.internet.password({ length: 10, memorable: false });
+        const validPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
+        const invalidConfirmPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
 
         await registerPage.fillForm({
             login: validLogin,
