@@ -25,7 +25,7 @@ class RegisterPage {
     }
 
     async goto() {
-        await this.page.goto('https://buggy.justtestit.org/register');
+        await this.page.goto('/register');
     }
 
     async fillField(locator, value) {

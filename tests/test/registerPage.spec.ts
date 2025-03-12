@@ -10,7 +10,7 @@ test.describe('Registration Page Validation', () => {
         await registerPage.goto();
     });
 
-    test('should register successfully with valid data', async () => {
+    test('Registration successfully with valid data', async () => {
         const validLogin = faker.string.alphanumeric(8);
         const validFirstName = faker.person.firstName();
         const validLastName = faker.person.lastName();
@@ -27,12 +27,12 @@ test.describe('Registration Page Validation', () => {
 
     });
 
-    test('should disable register button when all fields are empty', async () => {
+    test('Registration with empty fields', async () => {
         await registerPage.fillForm({}); 
         expect(await registerPage.isRegisterButtonDisabled()).toBeTruthy(); 
     });
     
-    test('should show error when login is missing', async () => {
+    test('Registration when login is missing', async () => {
         const validFirstName = faker.person.firstName();
         const validLastName = faker.person.lastName();
         const validPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
@@ -46,7 +46,7 @@ test.describe('Registration Page Validation', () => {
         expect(await registerPage.isRegisterButtonDisabled()).toBeTruthy();
     });
     
-    test('should show error when first name is missing', async () => {
+    test('Registration when first name is missing', async () => {
         const validLogin = faker.string.alphanumeric(8);
         const validLastName = faker.person.lastName();
         const validPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
@@ -60,7 +60,7 @@ test.describe('Registration Page Validation', () => {
         expect(await registerPage.isRegisterButtonDisabled()).toBeTruthy();
     });
     
-    test('should show error when last name is missing', async () => {
+    test('Registration when last name is missing', async () => {
         const validLogin = faker.string.alphanumeric(8);
         const validFirstName = faker.person.firstName();
         const validPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
@@ -74,7 +74,7 @@ test.describe('Registration Page Validation', () => {
         expect(await registerPage.isRegisterButtonDisabled()).toBeTruthy();
     });
     
-    test('should show error when passwords do not match', async () => {
+    test('Registration when passwords do not match', async () => {
         const validLogin = faker.string.alphanumeric(8);
         const validFirstName = faker.person.firstName();
         const validLastName = faker.person.lastName();
