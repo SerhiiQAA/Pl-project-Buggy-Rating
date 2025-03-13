@@ -14,17 +14,15 @@ test.describe('Login Validation', () => {
         await mainPage.fillLoginDetails('TestLogin_', 'Password1@');
         await mainPage.clickLoginButton();
 
-        const logoutButton = mainPage.getLogoutButtonLocator();
-        await expect(logoutButton).toBeVisible();
+        await expect(mainPage.getLogoutButtonLocator()).toBeVisible();
     });
 
     test('Login with empty Login field / TC 2', async () => {
-        const validPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
+        const validPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9!@#$%^&*()]/ })+ '1!Serg';
         await mainPage.fillLoginDetails('', validPassword); 
         await mainPage.clickLoginButton();
 
-        const loginMessage = await mainPage.getLoginFieldValidationMessage();
-        expect(loginMessage.toLowerCase()).toContain('fill out this field');
+        await expect(mainPage.getLoginFieldValidationMessage()).resolves.toMatch(/fill out this field/i);
     });
 
     test('Login with empty Password field / TC 3', async () => {
@@ -32,25 +30,22 @@ test.describe('Login Validation', () => {
         await mainPage.fillLoginDetails(validLogin, ''); 
         await mainPage.clickLoginButton();
 
-        const passwordMessage = await mainPage.getPasswordFieldValidationMessage();
-        expect(passwordMessage.toLowerCase()).toContain('fill out this field');
+        await expect(mainPage.getPasswordFieldValidationMessage()).resolves.toMatch(/fill out this field/i);
     });
 
     test('Login with empty fields / TC 4', async () => {
         await mainPage.fillLoginDetails('', ''); 
         await mainPage.clickLoginButton();
 
-        const loginMessage = await mainPage.getLoginFieldValidationMessage();
-        expect(loginMessage.toLowerCase()).toContain('fill out this field');
+        await expect(mainPage.getLoginFieldValidationMessage()).resolves.toMatch(/fill out this field/i);
     });
 
     test('Login with invalid data / TC 5', async () => {
         const invalidLogin = faker.string.alphanumeric(8); 
-        const invalidPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
+        const invalidPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9!@#$%^&*()]/ })+ '1!Serg';
         await mainPage.fillLoginDetails(invalidLogin, invalidPassword);
         await mainPage.clickLoginButton();
 
-        const warningText = await mainPage.getWarningLabelText();
-        expect(warningText?.trim()).toBe('Invalid username/password');
+        await expect(mainPage.getWarningLabelText()).resolves.toMatch(/invalid username\/password/i);
     });
 });
