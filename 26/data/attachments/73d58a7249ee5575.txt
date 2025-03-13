@@ -1,0 +1,202 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Registration Page Validation >> Registration with valid data / TC 6
+- Location: /home/user/Documents/QA_Automation_projects/Playwright/Pl project Buggy Rating/tests/test/registerPage.spec.ts:13:9
+
+# Error details
+
+```
+Error: Timed out 5000ms waiting for expect(locator).toHaveText(expected)
+
+Locator: locator('.result')
+Expected pattern: /Registration is successful/i
+Received string:  "
+                InvalidPasswordException: Password did not conform with policy: Password must have symbol characters
+            "
+Call log:
+  - expect.toHaveText with timeout 5000ms
+  - waiting for locator('.result')
+    4 × locator resolved to <div _ngcontent-yqp-4="" class="result alert alert-danger">↵                InvalidPasswordException: Passwo…</div>
+      - unexpected value "
+                InvalidPasswordException: Password did not conform with policy: Password must have symbol characters
+            "
+
+    at /home/user/Documents/QA_Automation_projects/Playwright/Pl project Buggy Rating/tests/test/registerPage.spec.ts:29:63
+```
+
+# Page snapshot
+
+```yaml
+- banner:
+  - navigation:
+    - link "Buggy Rating"
+    - textbox "Login"
+    - textbox
+    - button "Login"
+    - link "Register"
+  - heading "Buggy Cars Rating" [level=1]
+  - img
+- main:
+  - main:
+    - heading "Register with Buggy Cars Rating" [level=2]
+    - text: Login
+    - textbox "Login": Zs5KTCLE
+    - text: First Name
+    - textbox "First Name": Nyasia
+    - text: Last Name
+    - textbox "Last Name": Hartmann
+    - text: Password
+    - textbox "Password": 5QLaFcRd
+    - text: Confirm Password
+    - textbox "Confirm Password": 5QLaFcRd
+    - button "Register"
+    - button "Cancel"
+    - text: "InvalidPasswordException: Password did not conform with policy: Password must have symbol characters"
+  - separator
+  - link "Facebook":
+    - img
+  - link "Twitter":
+    - img
+  - paragraph: © 2016 Buggy Software, Inc.
+```
+
+# Test source
+
+```ts
+   1 | import { test, expect } from '@playwright/test';
+   2 | import { RegisterPage } from '../page/RegisterPage';
+   3 | import { faker } from '@faker-js/faker';
+   4 |
+   5 | test.describe('Registration Page Validation', () => {
+   6 |     let registerPage: RegisterPage;
+   7 |
+   8 |     test.beforeEach(async ({ page }) => {
+   9 |         registerPage = new RegisterPage(page);
+   10 |         await registerPage.goto();
+   11 |     });
+   12 |
+   13 |     test('Registration with valid data / TC 6', async () => {
+   14 |         const validLogin = faker.string.alphanumeric(8);
+   15 |         const validFirstName = faker.person.firstName();
+   16 |         const validLastName = faker.person.lastName();
+   17 |         const validPassword = faker.internet.password({ length: 8, memorable: false, pattern: /[a-zA-Z0-9!@#$%^&*()]/ });
+   18 |
+   19 |         await registerPage.fillForm({
+   20 |             login: validLogin,
+   21 |             firstName: validFirstName,
+   22 |             lastName: validLastName,
+   23 |             password: validPassword,
+   24 |             confirmPassword: validPassword,
+   25 |         });
+   26 |
+   27 |         await registerPage.clickRegisterButton();
+   28 |
+>  29 |         await expect(registerPage.getSuccessMessageLocator()).toHaveText(/Registration is successful/i);
+      |                                                               ^ Error: Timed out 5000ms waiting for expect(locator).toHaveText(expected)
+   30 |     });
+   31 |
+   32 |     test('Registration with invalid Login / TC 7', async () => {
+   33 |         const validFirstName = faker.person.firstName();
+   34 |         const validLastName = faker.person.lastName();
+   35 |         const validPassword = faker.internet.password({ length: 8, memorable: false, pattern: /[a-zA-Z0-9]/ });
+   36 |
+   37 |         await registerPage.fillForm({
+   38 |             firstName: validFirstName,
+   39 |             lastName: validLastName,
+   40 |             password: validPassword,
+   41 |             confirmPassword: validPassword,
+   42 |         });
+   43 |
+   44 |         const isDisabled = await registerPage.isRegisterButtonDisabled();
+   45 |         expect(isDisabled).toBeTruthy();
+   46 |     });
+   47 |
+   48 |     test('Registration with invalid First Name / TC 8', async () => {
+   49 |         const validLogin = faker.string.alphanumeric(8);
+   50 |         const validLastName = faker.person.lastName();
+   51 |         const validPassword = faker.internet.password({ length: 8, memorable: false, pattern: /[a-zA-Z0-9]/ });
+   52 |
+   53 |         await registerPage.fillForm({
+   54 |             login: validLogin,
+   55 |             lastName: validLastName,
+   56 |             password: validPassword,
+   57 |             confirmPassword: validPassword,
+   58 |         });
+   59 |
+   60 |         const isDisabled = await registerPage.isRegisterButtonDisabled();
+   61 |         expect(isDisabled).toBeTruthy();
+   62 |     });
+   63 |
+   64 |     test('Registration with invalid Last Name / TC 9', async () => {
+   65 |         const validLogin = faker.string.alphanumeric(8);
+   66 |         const validFirstName = faker.person.firstName();
+   67 |         const validPassword = faker.internet.password({ length: 8, memorable: false, pattern: /[a-zA-Z0-9]/ });
+   68 |
+   69 |         await registerPage.fillForm({
+   70 |             login: validLogin,
+   71 |             firstName: validFirstName,
+   72 |             password: validPassword,
+   73 |             confirmPassword: validPassword,
+   74 |         });
+   75 |
+   76 |         const isDisabled = await registerPage.isRegisterButtonDisabled();
+   77 |         expect(isDisabled).toBeTruthy();
+   78 |     });
+   79 |
+   80 |     test('Registration when passwords do not match / TC 10', async () => {
+   81 |         const validLogin = faker.string.alphanumeric(8);
+   82 |         const validFirstName = faker.person.firstName();
+   83 |         const validLastName = faker.person.lastName();
+   84 |         const validPassword = faker.internet.password({ length: 8, memorable: false, pattern: /[a-zA-Z0-9]/ });
+   85 |         const invalidConfirmPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
+   86 |
+   87 |         await registerPage.fillForm({
+   88 |             login: validLogin,
+   89 |             firstName: validFirstName,
+   90 |             lastName: validLastName,
+   91 |             password: validPassword,
+   92 |             confirmPassword: invalidConfirmPassword,
+   93 |         });
+   94 |
+   95 |         const isDisabled = await registerPage.isRegisterButtonDisabled();
+   96 |         expect(isDisabled).toBeTruthy();
+   97 |
+   98 |         const errorMessage = await registerPage.getPasswordMismatchError();
+   99 |         expect(errorMessage).toContain('Passwords do not match');
+  100 |     });
+  101 |
+  102 |     test('Registration with empty fields / TC 11', async () => {
+  103 |         await registerPage.fillForm({});
+  104 |
+  105 |         const isDisabled = await registerPage.isRegisterButtonDisabled();
+  106 |         expect(isDisabled).toBeTruthy();
+  107 |     });
+  108 | });
+  109 |
+  110 |
+  111 |
+  112 |
+  113 |
+  114 | // import { test, expect } from '@playwright/test';
+  115 | // import { RegisterPage } from '../page/RegisterPage';
+  116 | // import { faker } from '@faker-js/faker';
+  117 |
+  118 | // test.describe('Registration Page Validation', () => {
+  119 | //     let registerPage;
+  120 |
+  121 | //     test.beforeEach(async ({ page }) => {
+  122 | //         registerPage = new RegisterPage(page);
+  123 | //         await registerPage.goto();
+  124 | //     });
+  125 |
+  126 | //     test('Registretion with valid data / TC 6', async () => {
+  127 | //         const validLogin = faker.string.alphanumeric(8);
+  128 | //         const validFirstName = faker.person.firstName();
+  129 | //         const validLastName = faker.person.lastName();
+```
