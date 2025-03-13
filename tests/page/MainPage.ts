@@ -4,23 +4,17 @@ const loginInput = 'input[name="login"]';
 const passwordInput = 'input[name="password"]';
 const loginButton = '.btn-success';
 const registerButton = '.btn-success-outline';
-
 const firstAvtoCard = '.img-fluid.center-block:nth-of-type(1)';
 const secondAvtoCard = '.img-fluid.center-block:nth-of-type(2)';
 const thirdAvtoCard = '.img-fluid.center-block:nth-of-type(3)';
-
 const firstAvtoCardTitle = 'h2:nth-of-type(1)';
 const secondAvtoCardTitle = 'h2:nth-of-type(2)';
 const thirdAvtoCardTitle = 'h2:nth-of-type(3)';
-
 const facebookSocialMediaButton = '[title="Facebook"]';
 const xSocialMediaButton = '[title="Twitter"]';
-
 const warningLabel = '.label-warning';
-
 const logo = '.navbar-brand';
 const logoutButton = 'li.nav-item:nth-child(3) > a:nth-child(1)';
-
 const hiMessageAccount = '.nav-item:nth-of-type(1)';
 
 class MainPage {

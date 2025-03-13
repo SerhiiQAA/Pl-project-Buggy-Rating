@@ -5,10 +5,8 @@ const firstNameField = '#firstName';
 const lastNameField = '#lastName';
 const passwordField = '#password';
 const confirmPasswordField = '#confirmPassword';
-
 const registerButton = '.btn-default';
 const cancelButton = 'a.btn:nth-child(7)';
-
 const errorMessage = '.result';
 const errorMessageForLogin = '(//div[@class="alert alert-danger"])[1]';
 const errorMessageForFirstName = '(//div[@class="alert alert-danger"])[2]';
