@@ -60,10 +60,6 @@ class MainPage {
         await this.loginButton.click();
     }
 
-    // async clickLogoutButton() {
-    //     await this.logoutButton.click();
-    // }
-
     async clickLogo() {
         await this.logo.click();
     }
