@@ -1,0 +1,252 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Registration Page Validation >> Registration with valid data / TC 6
+- Location: /home/user/Documents/QA_Automation_projects/Playwright/Pl project Buggy Rating/tests/test/registerPage.spec.ts:13:9
+
+# Error details
+
+```
+Error: locator.textContent: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('.alert-success')
+
+    at RegisterPage.getSuccessMessageText (/home/user/Documents/QA_Automation_projects/Playwright/Pl project Buggy Rating/tests/page/RegisterPage.ts:89:80)
+    at /home/user/Documents/QA_Automation_projects/Playwright/Pl project Buggy Rating/tests/test/registerPage.spec.ts:29:51
+```
+
+# Page snapshot
+
+```yaml
+- banner:
+  - navigation:
+    - link "Buggy Rating"
+    - textbox "Login"
+    - textbox
+    - button "Login"
+    - link "Register"
+  - heading "Buggy Cars Rating" [level=1]
+  - img
+- main:
+  - main:
+    - heading "Register with Buggy Cars Rating" [level=2]
+    - text: Login
+    - textbox "Login": OpJZhjc6
+    - text: First Name
+    - textbox "First Name": Lon
+    - text: Last Name
+    - textbox "Last Name": Bahringer
+    - text: Password
+    - textbox "Password": zMfcgKmd
+    - text: Confirm Password
+    - textbox "Confirm Password": zMfcgKmd
+    - button "Register"
+    - button "Cancel"
+    - text: "InvalidPasswordException: Password did not conform with policy: Password must have numeric characters"
+  - separator
+  - link "Facebook":
+    - img
+  - link "Twitter":
+    - img
+  - paragraph: © 2016 Buggy Software, Inc.
+```
+
+# Test source
+
+```ts
+   1 | import { Page, Locator } from '@playwright/test';
+   2 |
+   3 | class RegisterPage {
+   4 |     private page: Page;
+   5 |
+   6 |     // Локатори
+   7 |     private loginFieldSelector: string = '#username';
+   8 |     private firstNameFieldSelector: string = '#firstName';
+   9 |     private lastNameFieldSelector: string = '#lastName';
+   10 |     private passwordFieldSelector: string = '#password';
+   11 |     private confirmPasswordFieldSelector: string = '#confirmPassword';
+   12 |     private registerButtonSelector: string = '.btn-default';
+   13 |     private errorMessageForPasswordsSelector: string = '(//div[@class="alert alert-danger"])[6]';
+   14 |     private successMessageAfterRegistrationSelector: string = '.alert-success';
+   15 |
+   16 |     constructor(page: Page) {
+   17 |         this.page = page;
+   18 |     }
+   19 |
+   20 |     // Геттери
+   21 |     get loginField(): Locator {
+   22 |         return this.page.locator(this.loginFieldSelector);
+   23 |     }
+   24 |
+   25 |     get firstNameField(): Locator {
+   26 |         return this.page.locator(this.firstNameFieldSelector);
+   27 |     }
+   28 |
+   29 |     get lastNameField(): Locator {
+   30 |         return this.page.locator(this.lastNameFieldSelector);
+   31 |     }
+   32 |
+   33 |     get passwordField(): Locator {
+   34 |         return this.page.locator(this.passwordFieldSelector);
+   35 |     }
+   36 |
+   37 |     get confirmPasswordField(): Locator {
+   38 |         return this.page.locator(this.confirmPasswordFieldSelector);
+   39 |     }
+   40 |
+   41 |     get registerButton(): Locator {
+   42 |         return this.page.locator(this.registerButtonSelector);
+   43 |     }
+   44 |
+   45 |     get errorMessageForPasswords(): Locator {
+   46 |         return this.page.locator(this.errorMessageForPasswordsSelector);
+   47 |     }
+   48 |
+   49 |     // Методи
+   50 |     async goto() {
+   51 |         await this.page.goto('/register');
+   52 |     }
+   53 |
+   54 |     async fillField(locator: Locator, value: string | undefined) {
+   55 |         if (value !== undefined) {
+   56 |             await locator.fill(value);
+   57 |         }
+   58 |     }
+   59 |
+   60 |     async fillForm({
+   61 |         login,
+   62 |         firstName,
+   63 |         lastName,
+   64 |         password,
+   65 |         confirmPassword,
+   66 |     }: {
+   67 |         login?: string;
+   68 |         firstName?: string;
+   69 |         lastName?: string;
+   70 |         password?: string;
+   71 |         confirmPassword?: string;
+   72 |     }) {
+   73 |         await this.fillField(this.loginField, login);
+   74 |         await this.fillField(this.firstNameField, firstName);
+   75 |         await this.fillField(this.lastNameField, lastName);
+   76 |         await this.fillField(this.passwordField, password);
+   77 |         await this.fillField(this.confirmPasswordField, confirmPassword);
+   78 |     }
+   79 |
+   80 |     async clickRegisterButton() {
+   81 |         await this.registerButton.click();
+   82 |     }
+   83 |
+   84 |     async isRegisterButtonDisabled(): Promise<boolean> {
+   85 |         return this.registerButton.isDisabled();
+   86 |     }
+   87 |
+   88 |     async getSuccessMessageText(): Promise<string | null> {
+>  89 |         return this.page.locator(this.successMessageAfterRegistrationSelector).textContent();
+      |                                                                                ^ Error: locator.textContent: Test timeout of 30000ms exceeded.
+   90 |     }    
+   91 |
+   92 |     async getPasswordMismatchError(): Promise<string | null> {
+   93 |         return this.errorMessageForPasswords.textContent();
+   94 |     }
+   95 | }
+   96 |
+   97 | export { RegisterPage };
+   98 |
+   99 |
+  100 |
+  101 |
+  102 | // import { Page, Locator, expect } from '@playwright/test';
+  103 |
+  104 | // class RegisterPage {
+  105 | //     private page: Page;
+  106 |
+  107 | //     // Локатори, які можуть змінюватися
+  108 | //     private loginFieldSelector: string = '#username';
+  109 | //     private firstNameFieldSelector: string = '#firstName';
+  110 | //     private lastNameFieldSelector: string = '#lastName';
+  111 | //     private passwordFieldSelector: string = '#password';
+  112 | //     private confirmPasswordFieldSelector: string = '#confirmPassword';
+  113 | //     private registerButtonSelector: string = '.btn-default';
+  114 | //     private cancelButtonSelector: string = 'a.btn:nth-child(7)';
+  115 | //     private errorMessageSelector: string = '.result';
+  116 | //     private errorMessageForLoginSelector: string = '(//div[@class="alert alert-danger"])[1]';
+  117 | //     private errorMessageForFirstNameSelector: string = '(//div[@class="alert alert-danger"])[2]';
+  118 | //     private errorMessageForLastNameSelector: string = '(//div[@class="alert alert-danger"])[3]';
+  119 | //     private errorMessageForPasswordSelector: string = '(//div[@class="alert alert-danger"])[4]';
+  120 | //     private errorMessageForConfirmPasswordSelector: string = '(//div[@class="alert alert-danger"])[5]';
+  121 | //     private errorMessageForPasswordsSelector: string = '(//div[@class="alert alert-danger"])[6]';
+  122 |
+  123 | //     constructor(page: Page) {
+  124 | //         this.page = page;
+  125 | //     }
+  126 |
+  127 | //     // Геттери для динамічних локаторів
+  128 | //     get loginField(): Locator {
+  129 | //         return this.page.locator(this.loginFieldSelector);
+  130 | //     }
+  131 |
+  132 | //     get firstNameField(): Locator {
+  133 | //         return this.page.locator(this.firstNameFieldSelector);
+  134 | //     }
+  135 |
+  136 | //     get lastNameField(): Locator {
+  137 | //         return this.page.locator(this.lastNameFieldSelector);
+  138 | //     }
+  139 |
+  140 | //     get passwordField(): Locator {
+  141 | //         return this.page.locator(this.passwordFieldSelector);
+  142 | //     }
+  143 |
+  144 | //     get confirmPasswordField(): Locator {
+  145 | //         return this.page.locator(this.confirmPasswordFieldSelector);
+  146 | //     }
+  147 |
+  148 | //     get registerButton(): Locator {
+  149 | //         return this.page.locator(this.registerButtonSelector);
+  150 | //     }
+  151 |
+  152 | //     get cancelButton(): Locator {
+  153 | //         return this.page.locator(this.cancelButtonSelector);
+  154 | //     }
+  155 |
+  156 | //     get errorMessage(): Locator {
+  157 | //         return this.page.locator(this.errorMessageSelector);
+  158 | //     }
+  159 |
+  160 | //     get errorMessageForLogin(): Locator {
+  161 | //         return this.page.locator(this.errorMessageForLoginSelector);
+  162 | //     }
+  163 |
+  164 | //     get errorMessageForFirstName(): Locator {
+  165 | //         return this.page.locator(this.errorMessageForFirstNameSelector);
+  166 | //     }
+  167 |
+  168 | //     get errorMessageForLastName(): Locator {
+  169 | //         return this.page.locator(this.errorMessageForLastNameSelector);
+  170 | //     }
+  171 |
+  172 | //     get errorMessageForPassword(): Locator {
+  173 | //         return this.page.locator(this.errorMessageForPasswordSelector);
+  174 | //     }
+  175 |
+  176 | //     get errorMessageForConfirmPassword(): Locator {
+  177 | //         return this.page.locator(this.errorMessageForConfirmPasswordSelector);
+  178 | //     }
+  179 |
+  180 | //     get errorMessageForPasswords(): Locator {
+  181 | //         return this.page.locator(this.errorMessageForPasswordsSelector);
+  182 | //     }
+  183 |
+  184 | //     async goto() {
+  185 | //         await this.page.goto('/register');
+  186 | //     }
+  187 |
+  188 | //     async fillField(locator: Locator, value: string | undefined) {
+  189 | //         if (value !== undefined) {
+```
