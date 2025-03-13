@@ -40,6 +40,10 @@ class RegisterPage {
         return this.page.locator(this.registerButtonSelector);
     }
 
+    get successMessage(): Locator {
+        return this.page.locator(this.successMessageAfterRegistrationSelector);
+    }
+
     get errorMessageForPasswords(): Locator {
         return this.page.locator(this.errorMessageForPasswordsSelector);
     }
@@ -54,38 +58,25 @@ class RegisterPage {
         }
     }
 
-    async fillForm({
-        login,
-        firstName,
-        lastName,
-        password,
-        confirmPassword,
-    }: {
-        login?: string;
-        firstName?: string;
-        lastName?: string;
-        password?: string;
-        confirmPassword?: string;
-    }) {
-        await this.fillField(this.loginField, login);
-        await this.fillField(this.firstNameField, firstName);
-        await this.fillField(this.lastNameField, lastName);
-        await this.fillField(this.passwordField, password);
-        await this.fillField(this.confirmPasswordField, confirmPassword);
+    async fillForm(fields: { [key: string]: string | undefined }) {
+        const locators = {
+            login: this.loginField,
+            firstName: this.firstNameField,
+            lastName: this.lastNameField,
+            password: this.passwordField,
+            confirmPassword: this.confirmPasswordField,
+        };
+    
+        for (const [key, value] of Object.entries(fields)) {
+            if (value !== undefined) {
+                await this.fillField(locators[key], value);
+            }
+        }
     }
 
     async clickRegisterButton() {
         await this.registerButton.click();
-    }
-
-    async isRegisterButtonDisabled(): Promise<boolean> {
-        return this.registerButton.isDisabled();
-    }
-
-    getSuccessMessageLocator(): Locator {
-        return this.page.locator(this.successMessageAfterRegistrationSelector);
-    }
-    
+    } 
 
     async getPasswordMismatchError(): Promise<string | null> {
         return this.errorMessageForPasswords.textContent();

@@ -26,7 +26,7 @@ test.describe('Registration Page Validation', () => {
 
         await registerPage.clickRegisterButton();
 
-        await expect(registerPage.getSuccessMessageLocator()).toHaveText(/Registration is successful/i);
+        await expect(registerPage.successMessage).toHaveText(/Registration is successful/i);
     });
 
     test('Registration with invalid Login / TC 7', async () => {
@@ -41,7 +41,7 @@ test.describe('Registration Page Validation', () => {
             confirmPassword: validPassword,
         });
 
-        await expect(registerPage.isRegisterButtonDisabled()).resolves.toBeTruthy();
+        await expect(registerPage.registerButton).toBeDisabled();
     });
 
     test('Registration with invalid First Name / TC 8', async () => {
@@ -56,7 +56,7 @@ test.describe('Registration Page Validation', () => {
             confirmPassword: validPassword,
         });
 
-        await expect(registerPage.isRegisterButtonDisabled()).resolves.toBeTruthy();
+        await expect(registerPage.registerButton).toBeDisabled();
     });
 
     test('Registration with invalid Last Name / TC 9', async () => {
@@ -71,7 +71,7 @@ test.describe('Registration Page Validation', () => {
             confirmPassword: validPassword,
         });
 
-        await expect(registerPage.isRegisterButtonDisabled()).resolves.toBeTruthy();
+        await expect(registerPage.registerButton).toBeDisabled();
     });
 
     test('Registration when passwords do not match / TC 10', async () => {
@@ -89,13 +89,13 @@ test.describe('Registration Page Validation', () => {
             confirmPassword: invalidConfirmPassword,
         });
 
-        await expect(registerPage.isRegisterButtonDisabled()).resolves.toBeTruthy();
+        await expect(registerPage.registerButton).toBeDisabled();
         await expect(registerPage.getPasswordMismatchError()).resolves.toContain('Passwords do not match');
     });
 
     test('Registration with empty fields / TC 11', async () => {
         await registerPage.fillForm({});
 
-        await expect(registerPage.isRegisterButtonDisabled()).resolves.toBeTruthy();
+        await expect(registerPage.registerButton).toBeDisabled();
     });
 });
