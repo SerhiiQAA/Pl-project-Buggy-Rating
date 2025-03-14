@@ -1,0 +1,190 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Registration Page Validation >> Registration with valid data / TC 6
+- Location: /home/user/Documents/QA_Automation_projects/Playwright/Pl project Buggy Rating/tests/test/registerPage.spec.ts:13:9
+
+# Error details
+
+```
+Error: expect(received).toBeFalsy()
+
+Received: true
+    at /home/user/Documents/QA_Automation_projects/Playwright/Pl project Buggy Rating/tests/test/registerPage.spec.ts:30:63
+```
+
+# Page snapshot
+
+```yaml
+- banner:
+  - navigation:
+    - link "Buggy Rating"
+    - textbox "Login"
+    - textbox
+    - button "Login"
+    - link "Register"
+  - heading "Buggy Cars Rating" [level=1]
+  - img
+- main:
+  - main:
+    - heading "Register with Buggy Cars Rating" [level=2]
+    - text: Login
+    - textbox "Login": k4Y3e7LB
+    - text: First Name
+    - textbox "First Name": Preston
+    - text: Last Name
+    - textbox "Last Name": Nicolas
+    - text: Password
+    - textbox "Password": Bc3euw1Q
+    - text: Confirm Password
+    - textbox "Confirm Password": Bc3euw1Q
+    - button "Register" [disabled]
+    - button "Cancel"
+  - separator
+  - link "Facebook":
+    - img
+  - link "Twitter":
+    - img
+  - paragraph: © 2016 Buggy Software, Inc.
+```
+
+# Test source
+
+```ts
+   1 | import { test, expect } from '@playwright/test';
+   2 | import { RegisterPage } from '../page/RegisterPage';
+   3 | import { faker } from '@faker-js/faker';
+   4 |
+   5 | test.describe('Registration Page Validation', () => {
+   6 |     let registerPage: RegisterPage;
+   7 |
+   8 |     test.beforeEach(async ({ page }) => {
+   9 |         registerPage = new RegisterPage(page);
+   10 |         await registerPage.goto();
+   11 |     });
+   12 |
+   13 |     test('Registration with valid data / TC 6', async () => {
+   14 |         const validLogin = faker.string.alphanumeric(8);
+   15 |         const validFirstName = faker.person.firstName();
+   16 |         const validLastName = faker.person.lastName();
+   17 |         const validPassword = faker.internet.password({ length: 8, memorable: false, pattern: /[a-zA-Z0-9]/ });
+   18 |
+   19 |         await registerPage.fillForm({
+   20 |             login: validLogin,
+   21 |             firstName: validFirstName,
+   22 |             lastName: validLastName,
+   23 |             password: validPassword,
+   24 |             confirmPassword: validPassword,
+   25 |         });
+   26 |
+   27 |         await registerPage.clickRegisterButton();
+   28 |
+   29 |         // Тут можна перевірити URL або інші аспекти після реєстрації
+>  30 |         expect(await registerPage.registerButton.isVisible()).toBeFalsy(); // Наприклад, кнопка має зникнути після реєстрації
+      |                                                               ^ Error: expect(received).toBeFalsy()
+   31 |     });
+   32 |
+   33 |     test('Registration with invalid Login / TC 7', async () => {
+   34 |         const validFirstName = faker.person.firstName();
+   35 |         const validLastName = faker.person.lastName();
+   36 |         const validPassword = faker.internet.password({ length: 8, memorable: false, pattern: /[a-zA-Z0-9]/ });
+   37 |
+   38 |         await registerPage.fillForm({
+   39 |             firstName: validFirstName,
+   40 |             lastName: validLastName,
+   41 |             password: validPassword,
+   42 |             confirmPassword: validPassword,
+   43 |         });
+   44 |
+   45 |         const isDisabled = await registerPage.isRegisterButtonDisabled();
+   46 |         expect(isDisabled).toBeTruthy();
+   47 |     });
+   48 |
+   49 |     test('Registration with invalid First Name / TC 8', async () => {
+   50 |         const validLogin = faker.string.alphanumeric(8);
+   51 |         const validLastName = faker.person.lastName();
+   52 |         const validPassword = faker.internet.password({ length: 8, memorable: false, pattern: /[a-zA-Z0-9]/ });
+   53 |
+   54 |         await registerPage.fillForm({
+   55 |             login: validLogin,
+   56 |             lastName: validLastName,
+   57 |             password: validPassword,
+   58 |             confirmPassword: validPassword,
+   59 |         });
+   60 |
+   61 |         const isDisabled = await registerPage.isRegisterButtonDisabled();
+   62 |         expect(isDisabled).toBeTruthy();
+   63 |     });
+   64 |
+   65 |     test('Registration with invalid Last Name / TC 9', async () => {
+   66 |         const validLogin = faker.string.alphanumeric(8);
+   67 |         const validFirstName = faker.person.firstName();
+   68 |         const validPassword = faker.internet.password({ length: 8, memorable: false, pattern: /[a-zA-Z0-9]/ });
+   69 |
+   70 |         await registerPage.fillForm({
+   71 |             login: validLogin,
+   72 |             firstName: validFirstName,
+   73 |             password: validPassword,
+   74 |             confirmPassword: validPassword,
+   75 |         });
+   76 |
+   77 |         const isDisabled = await registerPage.isRegisterButtonDisabled();
+   78 |         expect(isDisabled).toBeTruthy();
+   79 |     });
+   80 |
+   81 |     test('Registration when passwords do not match / TC 10', async () => {
+   82 |         const validLogin = faker.string.alphanumeric(8);
+   83 |         const validFirstName = faker.person.firstName();
+   84 |         const validLastName = faker.person.lastName();
+   85 |         const validPassword = faker.internet.password({ length: 8, memorable: false, pattern: /[a-zA-Z0-9]/ });
+   86 |         const invalidConfirmPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9]/ });
+   87 |
+   88 |         await registerPage.fillForm({
+   89 |             login: validLogin,
+   90 |             firstName: validFirstName,
+   91 |             lastName: validLastName,
+   92 |             password: validPassword,
+   93 |             confirmPassword: invalidConfirmPassword,
+   94 |         });
+   95 |
+   96 |         const isDisabled = await registerPage.isRegisterButtonDisabled();
+   97 |         expect(isDisabled).toBeTruthy();
+   98 |
+   99 |         const errorMessage = await registerPage.getPasswordMismatchError();
+  100 |         expect(errorMessage).toContain('Passwords do not match');
+  101 |     });
+  102 |
+  103 |     test('Registration with empty fields / TC 11', async () => {
+  104 |         await registerPage.fillForm({});
+  105 |
+  106 |         const isDisabled = await registerPage.isRegisterButtonDisabled();
+  107 |         expect(isDisabled).toBeTruthy();
+  108 |     });
+  109 | });
+  110 |
+  111 |
+  112 |
+  113 |
+  114 |
+  115 | // import { test, expect } from '@playwright/test';
+  116 | // import { RegisterPage } from '../page/RegisterPage';
+  117 | // import { faker } from '@faker-js/faker';
+  118 |
+  119 | // test.describe('Registration Page Validation', () => {
+  120 | //     let registerPage;
+  121 |
+  122 | //     test.beforeEach(async ({ page }) => {
+  123 | //         registerPage = new RegisterPage(page);
+  124 | //         await registerPage.goto();
+  125 | //     });
+  126 |
+  127 | //     test('Registretion with valid data / TC 6', async () => {
+  128 | //         const validLogin = faker.string.alphanumeric(8);
+  129 | //         const validFirstName = faker.person.firstName();
+  130 | //         const validLastName = faker.person.lastName();
+```
