@@ -40,86 +40,35 @@ This project is designed to automate the testing of web applications using moder
 ---
 
 ## CI/CD with GitHub Actions
-This project uses GitHub Actions to automatically generate and deploy Allure Reports. The following configuration is used:
+This project uses GitHub Actions to automatically generate and deploy Allure Reports. 
 
-```yaml
-name: allure-report
+## Functionality
+- Automatically generates Allure Reports after test execution.
+- Publishes these reports to GitHub Pages, enabling easy access and visualization.
+- Maintains report history using allure-history.
 
-on:
-  release:
-    types:
-      - created
-  push:
-    branches-ignore:
-      - '!master'
+## Allure Report
+The test execution results are published on GitHub Pages for convenient access. 
 
-jobs:
-  allure:
-    name: Generate Allure Report
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+## How to Run the Project Locally
 
-      - name: Get Allure history
-        uses: actions/checkout@v2
-        if: always()
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages
+Follow these steps to set up and run the project locally on your machine:
 
-      - name: Allure Report action from marketplace
-        uses: simple-elf/allure-report-action@master
-        if: always()
-        with:
-          allure_results: allure-results
-          allure_history: allure-history
-          keep_reports: 20
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd <project-folder>
 
-      - name: Deploy report to Github Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v2
-        env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history
+2. **Install dependencies:**
+    ```bash
+    npm install
 
- ## Functionality
+3. **Run tests:**
+    ```bash
+    npx playwright test 
+    
+4. **Generate Allure Report locally:**
+    ```bash
+    npx allure generate allure-results --clean -o allure-report
+    npx allure open allure-report
 
-    Automatically generates Allure Reports after test execution.
-
-    Publishes these reports to GitHub Pages, enabling easy access and visualization.
-
-    Maintains report history using allure-history
-
-    ## Allure Report
-
-The test execution results are published on GitHub Pages for convenient access.
-
-How to Run the Project Locally
-
-    Clone the repository:
-    bash
-    git clone <repository-url>
-cd <project-folder>
-
-Install dependencies:
-npm install
-
-Run tests:
-npx playwright test
-
-Generate Allure Report locally:
-npx allure generate allure-results --clean -o allure-report
-npx allure open allure-report
-
-Project Structure
-project/
-├── tests/                  # Test files
-├── utils/                  # Utility functions for data generation and storage
-│   ├── dataGenerators.ts   # Handles data generation and JSON operations
-│   ├── userData.json       # Stores the last registered user's details
-├── allure-results/         # Stores test execution results for Allure
-├── allure-report/          # Generated Allure Reports
-├── .github/workflows/      # GitHub Actions configurations
-└── README.md               # Project documentation
