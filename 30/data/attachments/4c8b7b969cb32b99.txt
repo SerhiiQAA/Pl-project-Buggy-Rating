@@ -1,0 +1,167 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Registration Page Validation >> Registration with valid data / TC 6
+- Location: /home/user/Documents/QA_Automation_projects/Playwright/Pl project Buggy Rating/tests/test/registerPage.spec.ts:19:9
+
+# Error details
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('.btn-default')
+    - locator resolved to <button disabled type="submit" _ngcontent-muh-4="" class="btn btn-default">Register</button>
+  - attempting click action
+    - waiting for element to be visible, enabled and stable
+    - element is not stable
+  - retrying click action
+    - waiting for element to be visible, enabled and stable
+    - element is not enabled
+  - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not enabled
+    - retrying click action
+      - waiting 100ms
+    23 × waiting for element to be visible, enabled and stable
+       - element is not enabled
+     - retrying click action
+       - waiting 500ms
+
+    at RegisterPage.clickRegisterButton (/home/user/Documents/QA_Automation_projects/Playwright/Pl project Buggy Rating/tests/page/RegisterPage.ts:78:35)
+    at /home/user/Documents/QA_Automation_projects/Playwright/Pl project Buggy Rating/tests/test/registerPage.spec.ts:28:28
+```
+
+# Page snapshot
+
+```yaml
+- banner:
+  - navigation:
+    - link "Buggy Rating"
+    - textbox "Login"
+    - textbox
+    - button "Login"
+    - link "Register"
+  - heading "Buggy Cars Rating" [level=1]
+  - img
+- main:
+  - main:
+    - heading "Register with Buggy Cars Rating" [level=2]
+    - text: Login
+    - textbox "Login": VNsAFs4q
+    - text: First Name
+    - textbox "First Name": Branson
+    - text: Last Name
+    - textbox "Last Name": Stehr-Erdman
+    - text: Password
+    - textbox "Password": qJemy8@g1!Serg
+    - text: Confirm Password
+    - textbox "Confirm Password": L1nh@DWC1!Serg
+    - text: Passwords do not match
+    - button "Register" [disabled]
+    - button "Cancel"
+  - separator
+  - link "Facebook":
+    - img
+  - link "Twitter":
+    - img
+  - paragraph: © 2016 Buggy Software, Inc.
+```
+
+# Test source
+
+```ts
+   1 | import { Page, Locator } from '@playwright/test';
+   2 |
+   3 | class RegisterPage {
+   4 |     private page: Page;
+   5 |
+   6 |     private loginFieldSelector: string = '#username';
+   7 |     private firstNameFieldSelector: string = '#firstName';
+   8 |     private lastNameFieldSelector: string = '#lastName';
+   9 |     private passwordFieldSelector: string = '#password';
+  10 |     private confirmPasswordFieldSelector: string = '#confirmPassword';
+  11 |     private registerButtonSelector: string = '.btn-default';
+  12 |     private errorMessageForPasswordsSelector: string = '(//div[@class="alert alert-danger"])[6]';
+  13 |     private successMessageAfterRegistrationSelector: string = '.result';
+  14 |
+  15 |     constructor(page: Page) {
+  16 |         this.page = page;
+  17 |     }
+  18 |
+  19 |     get loginField(): Locator {
+  20 |         return this.page.locator(this.loginFieldSelector);
+  21 |     }
+  22 |
+  23 |     get firstNameField(): Locator {
+  24 |         return this.page.locator(this.firstNameFieldSelector);
+  25 |     }
+  26 |
+  27 |     get lastNameField(): Locator {
+  28 |         return this.page.locator(this.lastNameFieldSelector);
+  29 |     }
+  30 |
+  31 |     get passwordField(): Locator {
+  32 |         return this.page.locator(this.passwordFieldSelector);
+  33 |     }
+  34 |
+  35 |     get confirmPasswordField(): Locator {
+  36 |         return this.page.locator(this.confirmPasswordFieldSelector);
+  37 |     }
+  38 |
+  39 |     get registerButton(): Locator {
+  40 |         return this.page.locator(this.registerButtonSelector);
+  41 |     }
+  42 |
+  43 |     get successMessage(): Locator {
+  44 |         return this.page.locator(this.successMessageAfterRegistrationSelector);
+  45 |     }
+  46 |
+  47 |     get errorMessageForPasswords(): Locator {
+  48 |         return this.page.locator(this.errorMessageForPasswordsSelector);
+  49 |     }
+  50 |
+  51 |     async goto() {
+  52 |         await this.page.goto('/register');
+  53 |     }
+  54 |
+  55 |     async fillField(locator: Locator, value: string | undefined) {
+  56 |         if (value !== undefined) {
+  57 |             await locator.fill(value);
+  58 |         }
+  59 |     }
+  60 |
+  61 |     async fillForm(fields: { [key: string]: string | undefined }) {
+  62 |         const locators = {
+  63 |             login: this.loginField,
+  64 |             firstName: this.firstNameField,
+  65 |             lastName: this.lastNameField,
+  66 |             password: this.passwordField,
+  67 |             confirmPassword: this.confirmPasswordField,
+  68 |         };
+  69 |     
+  70 |         for (const [key, value] of Object.entries(fields)) {
+  71 |             if (value !== undefined) {
+  72 |                 await this.fillField(locators[key], value);
+  73 |             }
+  74 |         }
+  75 |     }
+  76 |
+  77 |     async clickRegisterButton() {
+> 78 |         await this.registerButton.click();
+     |                                   ^ Error: locator.click: Test timeout of 30000ms exceeded.
+  79 |     } 
+  80 |
+  81 |     async getPasswordMismatchError(): Promise<string | null> {
+  82 |         return this.errorMessageForPasswords.textContent();
+  83 |     }
+  84 | }
+  85 |
+  86 | export { RegisterPage };
+  87 |
+```
