@@ -30,6 +30,7 @@ test.describe('Registration Page Validation', () => {
             confirmPassword: validPassword,
         });
     
+        await expect(registerPage.registerButton).toBeEnabled();
         await registerPage.clickRegisterButton();
         await expect(registerPage.successMessage).toHaveText(/Registration is successful/i);
     
@@ -41,7 +42,6 @@ test.describe('Registration Page Validation', () => {
         });
     });
     
-
     test('Registration with invalid Login / TC 7', async () => {     
         await registerPage.fillForm({
             firstName: generateValidFirstName(),
