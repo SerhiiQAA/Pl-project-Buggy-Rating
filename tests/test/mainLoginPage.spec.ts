@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { MainPage } from '../page/MainPage.ts';
-import { faker } from '@faker-js/faker'; 
+import { 
+    getLastRegisteredUser, 
+    generateAndStoreValidLogin, 
+    generateAndStoreValidPassword 
+} from '../../utils/dataGenerators';
 
 test.describe('Login Validation', () => {
     let mainPage: MainPage;
@@ -11,39 +15,40 @@ test.describe('Login Validation', () => {
     });
 
     test('Login with valid data / TC 1', async () => {
-        await mainPage.fillLoginDetails('TestLogin_', 'Password1@');
+        const validUser = getLastRegisteredUser();
+        if (!validUser) {
+            throw new Error('No registered user found. Ensure registration test has run successfully.');
+        }
+    
+        await mainPage.fillLoginDetails(validUser.login, validUser.password);
         await mainPage.clickLoginButton();
-
+    
         await expect(mainPage.getLogoutButtonLocator()).toBeVisible();
     });
-
-    test('Login with empty Login field / TC 2', async () => {
-        const validPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9!@#$%^&*()]/ })+ '1!Serg';
-        await mainPage.fillLoginDetails('', validPassword); 
+    
+    test('Login with empty Login field / TC 2', async () => {       
+        await mainPage.fillLoginDetails('', generateAndStoreValidPassword());
         await mainPage.clickLoginButton();
 
         await expect(mainPage.getLoginFieldValidationMessage()).resolves.toMatch(/fill out this field/i);
     });
 
-    test('Login with empty Password field / TC 3', async () => {
-        const validLogin = faker.string.alphanumeric(8); 
-        await mainPage.fillLoginDetails(validLogin, ''); 
+    test('Login with empty Password field / TC 3', async () => {       
+        await mainPage.fillLoginDetails(generateAndStoreValidLogin(), '');
         await mainPage.clickLoginButton();
 
         await expect(mainPage.getPasswordFieldValidationMessage()).resolves.toMatch(/fill out this field/i);
     });
 
-    test('Login with empty fields / TC 4', async () => {
-        await mainPage.fillLoginDetails('', ''); 
+    test('Login with empty fields / TC 4', async () => {       
+        await mainPage.fillLoginDetails('', '');
         await mainPage.clickLoginButton();
 
         await expect(mainPage.getLoginFieldValidationMessage()).resolves.toMatch(/fill out this field/i);
     });
 
     test('Login with invalid data / TC 5', async () => {
-        const invalidLogin = faker.string.alphanumeric(8); 
-        const invalidPassword = faker.internet.password({ length: 4, memorable: false, pattern: /[a-zA-Z0-9!@#$%^&*()]/ })+ '1!Serg';
-        await mainPage.fillLoginDetails(invalidLogin, invalidPassword);
+        await mainPage.fillLoginDetails(generateAndStoreValidLogin(), generateAndStoreValidPassword());
         await mainPage.clickLoginButton();
 
         await expect(mainPage.getWarningLabelText()).resolves.toMatch(/invalid username\/password/i);
