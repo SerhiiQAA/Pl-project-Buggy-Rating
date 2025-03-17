@@ -1,86 +1,71 @@
 import { Page, Locator } from '@playwright/test';
 
 class RegisterPage {
-    private page: Page;
-
-    private loginFieldSelector: string = '#username';
-    private firstNameFieldSelector: string = '#firstName';
-    private lastNameFieldSelector: string = '#lastName';
-    private passwordFieldSelector: string = '#password';
-    private confirmPasswordFieldSelector: string = '#confirmPassword';
-    private registerButtonSelector: string = '.btn-default';
-    private errorMessageForPasswordsSelector: string = '(//div[@class="alert alert-danger"])[6]';
-    private successMessageAfterRegistrationSelector: string = '.result';
-
-    constructor(page: Page) {
-        this.page = page;
-    }
+    constructor(private page: Page) {}
 
     get loginField(): Locator {
-        return this.page.locator(this.loginFieldSelector);
+        return this.page.locator('#username');
     }
 
     get firstNameField(): Locator {
-        return this.page.locator(this.firstNameFieldSelector);
+        return this.page.locator('#firstName');
     }
 
     get lastNameField(): Locator {
-        return this.page.locator(this.lastNameFieldSelector);
+        return this.page.locator('#lastName');
     }
 
     get passwordField(): Locator {
-        return this.page.locator(this.passwordFieldSelector);
+        return this.page.locator('#password');
     }
 
     get confirmPasswordField(): Locator {
-        return this.page.locator(this.confirmPasswordFieldSelector);
+        return this.page.locator('#confirmPassword');
     }
 
     get registerButton(): Locator {
-        return this.page.locator(this.registerButtonSelector);
+        return this.page.locator('.btn-default');
     }
 
     get successMessage(): Locator {
-        return this.page.locator(this.successMessageAfterRegistrationSelector);
+        return this.page.locator('.result');
     }
 
     get errorMessageForPasswords(): Locator {
-        return this.page.locator(this.errorMessageForPasswordsSelector);
+        return this.page.locator('(//div[@class="alert alert-danger"])[6]');
     }
 
     async goto() {
         await this.page.goto('/register');
     }
 
-    async fillField(locator: Locator, value: string | undefined) {
-        if (value !== undefined) {
-            await locator.fill(value);
-        }
-    }
-
-    async fillForm(fields: { [key: string]: string | undefined }) {
-        const locators = {
-            login: this.loginField,
-            firstName: this.firstNameField,
-            lastName: this.lastNameField,
-            password: this.passwordField,
-            confirmPassword: this.confirmPasswordField,
-        };
-    
-        for (const [key, value] of Object.entries(fields)) {
-            if (value !== undefined) {
-                await this.fillField(locators[key], value);
-            }
-        }
+    async fillForm(fields: Partial<RegisterFields>) {
+        if (fields.login) await this.loginField.fill(fields.login);
+        if (fields.firstName) await this.firstNameField.fill(fields.firstName);
+        if (fields.lastName) await this.lastNameField.fill(fields.lastName);
+        if (fields.password) await this.passwordField.fill(fields.password);
+        if (fields.confirmPassword) await this.confirmPasswordField.fill(fields.confirmPassword);
     }
 
     async clickRegisterButton() {
         await this.registerButton.click();
-    } 
+    }
 
     async getPasswordMismatchError(): Promise<string | null> {
         return this.errorMessageForPasswords.textContent();
     }
+
+    async getSuccessMessage(): Promise<string | null> {
+        return this.successMessage.textContent();
+    }
+}
+
+interface RegisterFields {
+    login: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    confirmPassword: string;
 }
 
 export { RegisterPage };

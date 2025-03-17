@@ -23,28 +23,28 @@ test.describe('Login Validation', () => {
         await mainPage.fillLoginDetails(validUser.login, validUser.password);
         await mainPage.clickLoginButton();
     
-        await expect(mainPage.getLogoutButtonLocator()).toBeVisible();
+        await expect(mainPage.logoutButton).toBeVisible();
     });
     
     test('Login with empty Login field / TC 2', async () => {       
         await mainPage.fillLoginDetails('', generateAndStoreValidPassword());
         await mainPage.clickLoginButton();
 
-        await expect(mainPage.getLoginFieldValidationMessage()).resolves.toMatch(/fill out this field/i);
+        await expect(mainPage.getValidationMessage(mainPage.loginInput)).resolves.toMatch(/fill out this field/i);
     });
 
     test('Login with empty Password field / TC 3', async () => {       
         await mainPage.fillLoginDetails(generateAndStoreValidLogin(), '');
         await mainPage.clickLoginButton();
 
-        await expect(mainPage.getPasswordFieldValidationMessage()).resolves.toMatch(/fill out this field/i);
+        await expect(mainPage.getValidationMessage(mainPage.passwordInput)).resolves.toMatch(/fill out this field/i);
     });
 
     test('Login with empty fields / TC 4', async () => {       
         await mainPage.fillLoginDetails('', '');
         await mainPage.clickLoginButton();
 
-        await expect(mainPage.getLoginFieldValidationMessage()).resolves.toMatch(/fill out this field/i);
+        await expect(mainPage.getValidationMessage(mainPage.loginInput)).resolves.toMatch(/fill out this field/i);
     });
 
     test('Login with invalid data / TC 5', async () => {
@@ -54,3 +54,4 @@ test.describe('Login Validation', () => {
         await expect(mainPage.getWarningLabelText()).resolves.toMatch(/invalid username\/password/i);
     });
 });
+

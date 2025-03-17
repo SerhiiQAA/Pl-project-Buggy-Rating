@@ -1,50 +1,46 @@
 import { Page, Locator } from '@playwright/test';
 
 class MainPage {
-    private page: Page;
-
-    private loginInputSelector: string = 'input[name="login"]';
-    private passwordInputSelector: string = 'input[name="password"]';
-    private loginButtonSelector: string = '.btn-success';
-    private registerButtonSelector: string = '.btn-success-outline';
-    private firstAvtoCardSelector: string = '.img-fluid.center-block:nth-of-type(1)';
-    private secondAvtoCardSelector: string = '.img-fluid.center-block:nth-of-type(2)';
-    private thirdAvtoCardSelector: string = '.img-fluid.center-block:nth-of-type(3)';
-    private warningLabelSelector: string = '.label-warning';
-    private logoSelector: string = '.navbar-brand';
-    private hiMessageAccountSelector: string = '.nav-item:nth-of-type(1)';
-    private logoutButtonSelector: string = '(//a[@class="nav-link"])[2]';
-
-    constructor(page: Page) {
-        this.page = page;
-    }
+    constructor(private page: Page) {}
 
     get loginInput(): Locator {
-        return this.page.locator(this.loginInputSelector);
+        return this.page.locator('input[name="login"]');
     }
 
     get passwordInput(): Locator {
-        return this.page.locator(this.passwordInputSelector);
+        return this.page.locator('input[name="password"]');
     }
 
     get loginButton(): Locator {
-        return this.page.locator(this.loginButtonSelector);
+        return this.page.locator('.btn-success');
+    }
+
+    get registerButton(): Locator {
+        return this.page.locator('.btn-success-outline');
     }
 
     get warningLabel(): Locator {
-        return this.page.locator(this.warningLabelSelector);
+        return this.page.locator('.label-warning');
     }
 
     get logo(): Locator {
-        return this.page.locator(this.logoSelector);
+        return this.page.locator('.navbar-brand');
     }
 
     get hiMessageAccount(): Locator {
-        return this.page.locator(this.hiMessageAccountSelector);
+        return this.page.locator('.nav-item:nth-of-type(1)');
     }
 
-    getLogoutButtonLocator(): Locator {
-        return this.page.locator(this.logoutButtonSelector);
+    get logoutButton(): Locator {
+        return this.page.locator('(//a[@class="nav-link"])[2]');
+    }
+
+    get avtoCards(): Locator[] {
+        return [
+            this.page.locator('.img-fluid.center-block:nth-of-type(1)'),
+            this.page.locator('.img-fluid.center-block:nth-of-type(2)'),
+            this.page.locator('.img-fluid.center-block:nth-of-type(3)')
+        ];
     }
 
     async goto() {
@@ -68,13 +64,10 @@ class MainPage {
         return await this.warningLabel.textContent();
     }
 
-    async getLoginFieldValidationMessage(): Promise<string> {
-        return await this.loginInput.evaluate(input => (input as HTMLInputElement).validationMessage);
-    }
-
-    async getPasswordFieldValidationMessage(): Promise<string> {
-        return await this.passwordInput.evaluate(input => (input as HTMLInputElement).validationMessage);
+    async getValidationMessage(locator: Locator): Promise<string> {
+        return await locator.evaluate(input => (input as HTMLInputElement).validationMessage);
     }
 }
 
 export { MainPage };
+
