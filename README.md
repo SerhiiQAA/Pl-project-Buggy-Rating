@@ -64,11 +64,34 @@ Follow these steps to set up and run the project locally on your machine:
     npm install
 
 3. **Run tests:**
+    To run tests in headless mode (default):
     ```bash
-    npx playwright test 
+    npm test
+    ```
+    To run tests in visible mode:
+    ```bash
+    npm run test:headed
+    ```
     
 4. **Generate Allure Report locally:**
     ```bash
-    npx allure generate allure-results --clean -o allure-report
-    npx allure open allure-report
+    npm run report:generate
 
+5. **Open Allure Report locally:**
+    ```bash
+    npm run report:open
+
+6. **Running Tests with Report Generation:**
+    Running Tests with Report:
+    ```bash
+    npm run test:report
+    ```
+## GitHub Actions
+
+The project uses GitHub Actions for CI/CD. The pipeline is defined in the `playwright.yml` file. The steps include:
+
+1. **Install dependencies**
+2. **Run tests**
+3. **Copy Allure results**
+4. **Generate Allure report**
+5. **Deploy report to GitHub Pages**
